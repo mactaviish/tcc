@@ -22,6 +22,9 @@ def realizar_regressao(df):
 
   return ln_Ky, alpha1, r2
 
+def calcular_yield(ln_Ky, alpha1, D):
+  return np.exp(ln_Ky + alpha1 * np.log(D))
+
 def processar(arquivo, descricao):
   df = carregar_dados(arquivo)
   df = processar_dados(df)
