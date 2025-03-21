@@ -1,5 +1,5 @@
 import numpy as np
-from utils.file_utils import routes, aircraft
+from utils.file_utils import routes, airplanes
 
 def calc_yield(distance: float):
   ln_Ky = 4.711637790213505
@@ -19,6 +19,6 @@ def calc_fare(distance: float):
 
 def get_data():
   try:
-    return aircraft(), routes()
+    return airplanes(), routes()
   except Exception as e:
     raise Exception(f'Erro ao carregar os dados: {e}')

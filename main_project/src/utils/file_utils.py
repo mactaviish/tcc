@@ -1,7 +1,7 @@
 import pandas as pd
 import os
 from typing import Type, List, Any
-from models.aircraft import Aircraft
+from models.airplane import Airplane
 from models.route import Route
 
 def import_sheet(file_name) -> pd.DataFrame:
@@ -19,9 +19,9 @@ def df_to_object_list(df: pd.DataFrame, cls: Type) -> List[Any]:
     object_list.append(obj)
   return object_list
 
-def aircraft() -> List[Aircraft]:
-  df = import_sheet("aircraft.xlsx")
-  return df_to_object_list(df, Aircraft)
+def airplanes() -> List[Airplane]:
+  df = import_sheet("airplanes.xlsx")
+  return df_to_object_list(df, Airplane)
 
 def routes() -> List[Route]:
   df = import_sheet("routes.xlsx")

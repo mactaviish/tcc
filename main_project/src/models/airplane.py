@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 @dataclass
-class Aircraft:
+class Airplane:
   manufacturer: str
   model: str
   seats: int
