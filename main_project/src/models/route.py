@@ -6,3 +6,4 @@ class Route:
   destination: str
   distance: float
   demand: int
+  runway_length: int
