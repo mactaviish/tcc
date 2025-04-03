@@ -171,6 +171,7 @@ cython_debug/
 .pypirc
 
 # Output files
+output/
 *.ilp
 *.lp
 *.mps
