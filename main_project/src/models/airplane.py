@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from utils.str_utils import clean_string
 
 @dataclass
 class Airplane:
@@ -7,3 +8,6 @@ class Airplane:
   seats: int
   range_km: float
   min_runway_length: float
+
+  def id(self):
+    return clean_string(f"{self.model}")
