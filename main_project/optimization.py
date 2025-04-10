@@ -84,7 +84,7 @@ def add_constraints(model: Model, airplanes: List[Airplane], routes: List[Route]
 def print_solution(model: Model, F, P, BIN, BIN2):
   if model.status == gp.GRB.OPTIMAL:
     print(f"\nValor objetivo: {model.ObjVal}\n")
-    print("✅ Solução ótima encontrada.")
+    print("Solução ótima encontrada.")
     for key, var in F.items():
         if var.X > 0:
             print(f"Destino: {key[0]} | Aeronave: {key[1]}")
@@ -93,4 +93,4 @@ def print_solution(model: Model, F, P, BIN, BIN2):
             print(f"  BIN (rota ativa): {BIN[key].X}")
             print(f"  BIN2 (modelo usado): {BIN2[key[1]].X}\n")
   else:
-      print("⚠️ Nenhuma solução ótima foi encontrada.")
+      print("Nenhuma solução ótima foi encontrada.")
