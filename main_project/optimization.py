@@ -1,6 +1,7 @@
 import gurobipy as gp
-import sys
+import csv
 from gurobipy import GRB, Model
+from tabulate import tabulate
 from typing import List
 from models.airplane import Airplane
 from models.route import Route
@@ -24,7 +25,7 @@ def run_optimization(airplanes: List[Airplane], routes: List[Route]):
   print_solution(model, airplane_flow, passenger_count, binary, binary2)
 
 def create_variables(model: Model, airplanes: List[Airplane], routes: List[Route]):
-  T, C, F, P, BIN, BIN2, K, Z = {}, {}, {}, {}, {}, {}, 2, sys.maxsize
+  T, C, F, P, BIN, BIN2, K, Z = {}, {}, {}, {}, {}, {}, 10, 100
 
   for route in routes:
     for airplane in airplanes:
@@ -83,14 +84,29 @@ def add_constraints(model: Model, airplanes: List[Airplane], routes: List[Route]
 
 def print_solution(model: Model, F, P, BIN, BIN2):
   if model.status == gp.GRB.OPTIMAL:
+    print("Solução ótima encontrada.\n")
     print(f"\nValor objetivo: {model.ObjVal}\n")
-    print("Solução ótima encontrada.")
+
+    table_data = []
+    headers = ["Destination", "Airplane", "Flow", "Passengers", "Active Route", "Active Airplane"]
     for key, var in F.items():
         if var.X > 0:
-            print(f"Destino: {key[0]} | Aeronave: {key[1]}")
-            print(f"  Aeronaves: {F[key].X}")
-            print(f"  Passageiros: {P[key].X}")
-            print(f"  BIN (rota ativa): {BIN[key].X}")
-            print(f"  BIN2 (modelo usado): {BIN2[key[1]].X}\n")
+          destination, airplane = key
+          active_route = "Yes" if BIN[key].X >= 0.5 else "No"
+          active_airplane = "Yes" if BIN2[airplane].X >= 0.5 else "No"
+          row = [
+            destination,
+            airplane,
+            F[key].X,
+            P[key].X,
+            active_route,
+            active_airplane
+          ]
+          table_data.append(row)
+    print(tabulate(table_data, headers, tablefmt="fancy_grid"))
+    with open("./output/solution.csv", mode="w", newline="", encoding="utf-8") as file:
+        writer = csv.writer(file)
+        writer.writerow(headers)
+        writer.writerows(table_data)
   else:
       print("Nenhuma solução ótima foi encontrada.")
