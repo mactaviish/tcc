@@ -1,8 +1,8 @@
 import pandas as pd
 import os
 from typing import Type, List, Any
-from models.airplane import Airplane
-from models.route import Route
+from src.models.airplane import Airplane
+from src.models.route import Route
 
 def import_sheet(file_name) -> pd.DataFrame:
   try:

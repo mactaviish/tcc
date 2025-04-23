@@ -1,5 +1,5 @@
 import numpy as np
-from utils.file_utils import routes, airplanes
+from src.utils.file_utils import routes, airplanes
 
 def calc_yield(distance: float):
   ln_Ky = 4.711637790213505

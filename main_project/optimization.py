@@ -3,8 +3,8 @@ import csv
 from gurobipy import GRB, Model
 from tabulate import tabulate
 from typing import List
-from models.airplane import Airplane
-from models.route import Route
+from src.models.airplane import Airplane
+from src.models.route import Route
 from src.utils.utils import calc_cask, calc_yield, calc_fare
 
 def run_optimization(airplanes: List[Airplane], routes: List[Route]):

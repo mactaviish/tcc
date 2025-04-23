@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from utils.str_utils import clean_string
+from src.utils.str_utils import clean_string
 
 @dataclass
 class Route:
