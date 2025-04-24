@@ -25,6 +25,4 @@ def airplanes() -> List[Airplane]:
 
 def routes() -> List[Route]:
   df = import_sheet("routes.xlsx")
-  route_list = df_to_object_list(df, Route)
-  # return [route for route in route_list if route.origin == "Chapecó - SC"]
-  return route_list
+  return df_to_object_list(df, Route)

@@ -19,6 +19,8 @@ def run_optimization(airplanes: List[Airplane], routes: List[Route]):
     for route in routes for airplane in airplanes
   ), GRB.MAXIMIZE)
 
+  model.setParam(GRB.Param.LogToConsole, 0)
+  model.setParam(GRB.Param.LogFile, "./output/gurobi.log")
   model.setParam(GRB.Param.TimeLimit, 600)
   model.optimize()
 
@@ -84,7 +86,7 @@ def add_constraints(model: Model, airplanes: List[Airplane], routes: List[Route]
 
 def print_solution(model: Model, F, P, BIN, BIN2):
   if model.status == gp.GRB.OPTIMAL:
-    print("Solução ótima encontrada.\n")
+    print("\nSolução ótima encontrada.")
     print(f"\nValor objetivo: {model.ObjVal}\n")
 
     table_data = []
