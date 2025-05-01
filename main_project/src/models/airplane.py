@@ -10,4 +10,4 @@ class Airplane:
   min_runway_length: float
 
   def id(self):
-    return clean_string(f"{self.model}")
+    return clean_string(f"{self.manufacturer,self.model}")
