@@ -38,7 +38,7 @@ class Airport:
       try:
         return float(str(val).replace(',', '.'))
       except:
-        return None
+        return 0.0
 
     return Airport(
       icao_code             = d.get('CódigoOACI', '').strip(),

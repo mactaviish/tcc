@@ -61,7 +61,9 @@ def add_constraints(model: Model, airplanes: List[Airplane], routes: List[Route]
   for route in routes:
     for airplane in airplanes:
       key = (route.destination, airplane.id())
-      model.addConstr(airplane.min_runway_length * BIN[key] <= airports.get(route.destination).runway1_length, name=f"runway_{key}")
+      airport = airports.get(route.destination)
+      larger_runway_length = max(airport.runway1_length, airport.runway2_length)
+      model.addConstr(airplane.min_runway_length * BIN[key] <= larger_runway_length, name=f"runway_{key}")
 
 # (3.4)
   for route in routes:
@@ -108,6 +110,10 @@ def print_solution(model: Model, F, P, BIN, BIN2):
             active_airplane
           ]
           table_data.append(row)
+    table_data.append([
+      "Valor objetivo",
+      model.ObjVal
+    ])
     print(tabulate(table_data, headers, tablefmt="fancy_grid"))
     with open(f"./output/{consts.AIRCRAFT_TYPE_LIMIT}.csv", mode="w", newline="", encoding="utf-8") as file:
         writer = csv.writer(file)
