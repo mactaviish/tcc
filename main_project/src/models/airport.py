@@ -1,5 +1,18 @@
 from dataclasses import dataclass
-from typing import List, Optional
+from enum import IntEnum
+import unicodedata
+import re
+
+class Surface(IntEnum):
+  DESCONHECIDO = 0
+  AREIA        = 1
+  Grama        = 2
+  GRAMA        = 3
+  SAIBRO       = 4
+  CASCALHO     = 5
+  PICARRA      = 6
+  ASFALTO      = 7
+  CONCRETO     = 8
 
 @dataclass
 class Airport:
@@ -34,11 +47,16 @@ class Airport:
 
   @staticmethod
   def from_dict(d: dict) -> 'Airport':
-    def to_float(val):
+    def to_float(val: str):
       try:
-        return float(str(val).replace(',', '.'))
+        return float(val.replace(',', '.'))
       except:
         return 0.0
+
+    def to_surface(val: str):
+      s = unicodedata.normalize('NFKD', val or '').encode('ASCII', 'ignore').decode().upper().strip()
+      s = re.sub(r'[^A-Z]', '', s)
+      return Surface[s].value if s in Surface.__members__ else Surface.DESCONHECIDO.value
 
     return Airport(
       icao_code             = d.get('CódigoOACI', '').strip(),
@@ -59,12 +77,12 @@ class Airport:
       runway1_length        = to_float(d.get('Comprimento1')),
       runway1_width         = to_float(d.get('Largura1')),
       runway1_strength      = to_float(d.get('Resistência1')),
-      runway1_surface       = d.get('Superfície1', '').strip(),
+      runway1_surface       = to_surface(d.get('Superfície1', '').strip()),
       runway2_designation   = d.get('Designação2', '').strip(),
       runway2_length        = to_float(d.get('Comprimento2')),
       runway2_width         = to_float(d.get('Largura2')),
       runway2_strength      = to_float(d.get('Resistência2')),
-      runway2_surface       = d.get('Superfície2', '').strip(),
+      runway2_surface       = to_surface(d.get('Superfície2', '').strip()),
       status                = d.get('SITUAÇÃO', '').strip(),
       registration_validity = d.get('ValidadedoRegistro', '').strip(),
       registration_decree   = d.get('PortariadeRegistro', '').strip(),

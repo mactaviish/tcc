@@ -7,7 +7,7 @@ from typing import List, Dict
 from src.models.airplane import Airplane
 from src.models.route import Route
 from src.models.airport import Airport
-from src.utils.utils import calc_cask, calc_yield, calc_fare, calc_distance
+from src.utils.utils import calc_cask, calc_distance
 
 def run_optimization(airplanes: List[Airplane], routes: List[Route], airports: Dict[str, Airport]):
   model = gp.Model("airline_optimization")
@@ -35,7 +35,7 @@ def create_variables(model: Model, airplanes: List[Airplane], routes: List[Route
     D[route.origin, route.destination] = calc_distance(airports.get(route.origin), airports.get(route.destination))
     for airplane in airplanes:
       key = (route.destination, airplane.id())
-      T[key] = calc_fare(D[route.origin, route.destination])
+      T[key] = route.fare
       C[key] = calc_cask(airplane.seats, D[route.origin, route.destination])
       F[key] = model.addVar(vtype=GRB.INTEGER, name=f"F_{key}")
       P[key] = model.addVar(vtype=GRB.INTEGER, name=f"P_{key}")
@@ -62,8 +62,14 @@ def add_constraints(model: Model, airplanes: List[Airplane], routes: List[Route]
     for airplane in airplanes:
       key = (route.destination, airplane.id())
       airport = airports.get(route.destination)
-      larger_runway_length = max(airport.runway1_length, airport.runway2_length)
-      model.addConstr(airplane.min_runway_length * BIN[key] <= larger_runway_length, name=f"runway_{key}")
+      runway_details = [
+        (airport.runway1_length, airport.runway1_surface),
+        (airport.runway2_length, airport.runway2_surface)
+      ]
+      larger_runway_length, larger_runway_surface = max(runway_details)
+
+      model.addConstr(airplane.min_runway_length * BIN[key] <= larger_runway_length, name=f"runway_length_{key}")
+      model.addConstr(airplane.min_runway_surface * BIN[key] <= larger_runway_surface, name=f"runway_surface_{key}")
 
 # (3.4)
   for route in routes:

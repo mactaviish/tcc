@@ -35,7 +35,7 @@ def airplanes() -> List[Airplane]:
   return df_to_object_list(df, Airplane)
 
 def routes() -> List[Route]:
-  df = import_sheet("routes.xlsx")
+  df = import_sheet("routes_2024.xlsx")
   route_list = df_to_object_list(df, Route)
   return_list = []
   for route in route_list:
@@ -45,6 +45,7 @@ def routes() -> List[Route]:
         Route(
           origin = route.origin,
           destination = route.destination,
+          fare = route.fare,
           demand = weekly_demand
         )
       )
@@ -59,8 +60,8 @@ def airports() -> Dict[str, Airport]:
 def valid_routes(routes: List[Route], airports: Dict[str, Airport]) -> List[Route]:
   valid_routes = []
   for route in routes:
-    if ((airports.get(route.origin) is None) or (airports.get(route.destination) is None)):
-      print(f"{route} ignored. No airport data available.")
+    if (airports.get(route.origin) and airports.get(route.destination)):
+      valid_routes.append(route)
       continue
-    valid_routes.append(route)
+    print(f"{route} ignored. No airport data available.")
   return valid_routes

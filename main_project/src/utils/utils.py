@@ -4,14 +4,8 @@ import src.consts as consts
 from src.models.airport import Airport
 from typing import Tuple
 
-def calc_yield(distance: float):
-  return np.exp(consts.LN_KY + consts.ALPHA1 * np.log(distance))
-
 def calc_cask(seats: int, distance: float):
   return np.exp(consts.LN_KC + consts.BETA1 * np.log(seats) + consts.BETA2 * np.log(distance))
-
-def calc_fare(distance: float):
-  return np.exp(consts.LN_KY + consts.ALPHA1 * np.log(distance)) * distance
 
 def calc_distance(a1: Airport, a2: Airport) -> float:
   coord1 = (a1.lat_geo_point, a1.lon_geo_point)

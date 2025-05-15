@@ -4,4 +4,5 @@ from dataclasses import dataclass
 class Route:
   origin: str
   destination: str
+  fare: float
   demand: int
