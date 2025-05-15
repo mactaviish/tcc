@@ -6,8 +6,8 @@ import re
 class Surface(IntEnum):
   DESCONHECIDO = 0
   AREIA        = 1
-  Grama        = 2
-  GRAMA        = 3
+  GRAMA        = 2
+  TERRA        = 3
   SAIBRO       = 4
   CASCALHO     = 5
   PICARRA      = 6
