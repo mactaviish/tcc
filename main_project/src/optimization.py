@@ -1,14 +1,13 @@
 import gurobipy as gp
 import src.consts as consts
-import csv
 from gurobipy import GRB, Model
-from tabulate import tabulate
 from typing import List, Dict
 from src.models.model_vars import ModelVars
 from src.models.airplane import Airplane
 from src.models.route import Route
 from src.models.airport import Airport
 from src.utils.utils import calc_cask, calc_distance
+from src.utils.print_utils import print_solution
 
 def run_optimization(airplanes: List[Airplane], routes: List[Route], airports: Dict[str, Airport]):
   model = gp.Model("airline_optimization")
@@ -95,36 +94,3 @@ def add_constraints(model: Model, airplanes: List[Airplane], routes: List[Route]
 
 # (3.8)
   model.addConstr(gp.quicksum(variables.BIN2[airplane.id()] for airplane in airplanes) <= variables.K, name=f"aircraft_types")
-
-def print_solution(model: Model, variables: ModelVars):
-  if model.status == gp.GRB.OPTIMAL:
-    print("\nSolução ótima encontrada.")
-    print(f"\nValor objetivo: {model.ObjVal}\n")
-
-    table_data = []
-    headers = ["Destination", "Airplane", "Flow", "Passengers", "Active Route", "Active Airplane"]
-    for key, var in variables.F.items():
-        if var.X > 0:
-          destination, airplane = key
-          active_route = "Yes" if variables.BIN[key].X >= 0.5 else "No"
-          active_airplane = "Yes" if variables.BIN2[airplane].X >= 0.5 else "No"
-          row = [
-            destination,
-            airplane,
-            variables.F[key].X,
-            variables.P[key].X,
-            active_route,
-            active_airplane
-          ]
-          table_data.append(row)
-    table_data.append([
-      "Valor objetivo",
-      model.ObjVal
-    ])
-    print(tabulate(table_data, headers, tablefmt="fancy_grid"))
-    with open(f"./output/{consts.AIRCRAFT_TYPE_LIMIT}.csv", mode="w", newline="", encoding="utf-8") as file:
-        writer = csv.writer(file)
-        writer.writerow(headers)
-        writer.writerows(table_data)
-  else:
-      print("Nenhuma solução ótima foi encontrada.")

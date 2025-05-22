@@ -35,7 +35,7 @@ def airplanes() -> List[Airplane]:
   return df_to_object_list(df, Airplane)
 
 def routes() -> List[Route]:
-  df = import_sheet("routes_2024.xlsx")
+  df = import_sheet(f"{consts.ROUTES_YEAR}.xlsx")
   route_list = df_to_object_list(df, Route)
   return_list = []
   for route in route_list:

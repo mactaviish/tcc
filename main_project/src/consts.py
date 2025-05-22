@@ -1,3 +1,6 @@
+# Input constants
+ROUTES_YEAR = ""
+
 # Math model constants
 AIRCRAFT_TYPE_LIMIT = 10
 MAX_FLIGHTS_PER_ROUTE = 100
